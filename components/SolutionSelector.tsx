@@ -2,20 +2,25 @@ import SolutionCounter, { solutionCounterState } from '@/components/SolutionCoun
 import { Button } from '@mui/material';
 import styled from '@emotion/styled';
 import { useRecoilValue } from 'recoil';
-import { MouseEvent, MouseEventHandler } from 'react';
-import { useQueries } from 'react-query';
-import { apiResolver } from 'next/dist/server/api-utils/node';
+import { MouseEvent, MouseEventHandler, useCallback } from 'react';
+import { useQueries, useQuery } from 'react-query';
+import { get } from '@/global/api/ApiClient';
+import { randomSolutionAPI } from '@/global/api/SolutionAPI';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const LabelWap = styled.div`
   text-align: center;
 `;
 
-const click = (e: MouseEvent<HTMLAnchorElement> | MouseEvent<HTMLButtonElement>, count: number) => {};
-
 const SolutionSelector = () => {
   const count = useRecoilValue(solutionCounterState);
-
-  //192.168.0.2
+  const router = useRouter();
+  // const { isLoading, error, data, refetch } = useQuery('SOLUTION_FETCH', () => randomSolutionAPI(count), { enabled: false });
+  // const { data } = await refetch();
+  const moveSolution = useCallback((e: MouseEvent<HTMLAnchorElement> | MouseEvent<HTMLButtonElement>, count: number) => {
+    router.push({ pathname: '/solution', query: { count } });
+  }, []);
 
   return (
     <>
@@ -29,7 +34,8 @@ const SolutionSelector = () => {
           { name: '3', value: '3' },
         ]}
       ></SolutionCounter>
-      <Button onClick={(e) => click(e, count)}>확인</Button>
+
+      <Button onClick={(e) => moveSolution(e, count)}>확인</Button>
     </>
   );
 };
