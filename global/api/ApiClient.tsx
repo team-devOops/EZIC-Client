@@ -1,7 +1,8 @@
 import axios, { Axios, AxiosRequestConfig } from 'axios';
+import { globalConfig } from '@/global/config';
 
 const DEFAULT_CONFIG: AxiosRequestConfig = {
-  baseURL: 'http://192.168.0.2:8080/api',
+  baseURL: globalConfig.BASE_URL,
   headers: {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
