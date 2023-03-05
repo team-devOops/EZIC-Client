@@ -4,10 +4,11 @@ import styled from '@emotion/styled';
 import { useRecoilValue } from 'recoil';
 import { MouseEvent, MouseEventHandler, useCallback } from 'react';
 import { useQueries, useQuery } from 'react-query';
-import { get } from '@/global/api/ApiClient';
+
 import { randomSolutionAPI } from '@/global/api/SolutionAPI';
-import Link from 'next/link';
+
 import { useRouter } from 'next/router';
+import { AxiosError } from 'axios';
 
 const LabelWap = styled.div`
   text-align: center;
@@ -16,10 +17,17 @@ const LabelWap = styled.div`
 const SolutionSelector = () => {
   const count = useRecoilValue(solutionCounterState);
   const router = useRouter();
-  // const { isLoading, error, data, refetch } = useQuery('SOLUTION_FETCH', () => randomSolutionAPI(count), { enabled: false });
-  // const { data } = await refetch();
-  const moveSolution = useCallback((e: MouseEvent<HTMLAnchorElement> | MouseEvent<HTMLButtonElement>, count: number) => {
-    router.push({ pathname: '/solution', query: { count } });
+  const { refetch } = useQuery('SOLUTION_FETCH', () => randomSolutionAPI(String(count)), { enabled: false });
+
+  const moveSolution = useCallback(async (e: MouseEvent<HTMLAnchorElement> | MouseEvent<HTMLButtonElement>, count: number) => {
+    const res = await refetch();
+    console.log(res);
+    if (res.isError) {
+      const err = res.error as AxiosError;
+      alert(err.message);
+      return;
+    }
+    await router.push({ pathname: '/solution', query: { count } });
   }, []);
 
   return (
