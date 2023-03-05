@@ -8,18 +8,22 @@ import { RecoilRoot, selector, useRecoilState, useRecoilValue } from 'recoil';
 import SolutionCounter from '@/components/SolutionCounter';
 import { MouseEventHandler } from 'react';
 import SolutionSelector from '@/components/SolutionSelector';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 const inter = Inter({ subsets: ['latin'] });
 
+const queryClient = new QueryClient();
 export default function Home() {
   return (
     <>
       <RecoilRoot>
-        <Container>
-          <Stack spacing={1}>
-            <SolutionSelector></SolutionSelector>
-          </Stack>
-        </Container>
+        <QueryClientProvider client={queryClient}>
+          <Container>
+            <Stack spacing={1}>
+              <SolutionSelector></SolutionSelector>
+            </Stack>
+          </Container>
+        </QueryClientProvider>
       </RecoilRoot>
     </>
   );
