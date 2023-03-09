@@ -12,3 +12,7 @@ const DEFAULT_CONFIG: AxiosRequestConfig = {
 export const get = (url: string) => {
   return axios.get(url, DEFAULT_CONFIG);
 };
+
+export const post = (url: string, json?: Object) => {
+  return axios.post(url, json, DEFAULT_CONFIG);
+};

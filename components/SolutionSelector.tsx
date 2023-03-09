@@ -5,7 +5,7 @@ import { useRecoilValue } from 'recoil';
 import { MouseEvent, MouseEventHandler, useCallback } from 'react';
 import { useQueries, useQuery } from 'react-query';
 
-import { randomSolutionAPI } from '@/global/api/SolutionAPI';
+import { randomSolutionSeq, randomTest } from '@/global/api/SolutionAPI';
 
 import { useRouter } from 'next/router';
 import { AxiosError } from 'axios';
@@ -14,10 +14,16 @@ const LabelWap = styled.div`
   text-align: center;
 `;
 
+const TEST_MAX_COUNT = 10;
+
+const items = Array.from({ length: TEST_MAX_COUNT }, (_, i) => {
+  return { name: String(i + 1), value: String(i + 1) };
+});
+
 const SolutionSelector = () => {
   const count = useRecoilValue(solutionCounterState);
   const router = useRouter();
-  const { refetch } = useQuery('SOLUTION_FETCH', () => randomSolutionAPI(String(count)), { enabled: false });
+  const { refetch } = useQuery('SOLUTION_FETCH', () => randomTest({ questionCnt: count }), { enabled: false });
 
   const moveSolution = useCallback(async (e: MouseEvent<HTMLAnchorElement> | MouseEvent<HTMLButtonElement>, count: number) => {
     const res = await refetch();
@@ -35,13 +41,7 @@ const SolutionSelector = () => {
       <LabelWap>
         <label>문제수를 고르세요</label>
       </LabelWap>
-      <SolutionCounter
-        items={[
-          { name: '1', value: '1' },
-          { name: '2', value: '2' },
-          { name: '3', value: '3' },
-        ]}
-      ></SolutionCounter>
+      <SolutionCounter items={items}></SolutionCounter>
 
       <Button onClick={(e) => moveSolution(e, count)}>확인</Button>
     </>
